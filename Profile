@@ -1,0 +1,81 @@
+try:
+	import requests
+	import json
+	import time
+	import os
+	os.remove("profile.py")
+	r = requests.Session()
+	time.sleep(3)
+	username = input("username(whme): ")
+	password = input("password: ")
+	url = "https://www.instagram.com/accounts/login/ajax/"
+	headers = {
+	"accept":"*/*",
+	"accept-encoding":"gzip, deflate,br",
+	"accept-language": "ar,en-US;q=0.9,en;q=0.8",
+	"content-length": "279",
+	"content-type": "application/x-www-form-urlencoded",
+	"origin": "https://www.instagram.com",
+	"referer": "https://www.instagram.com/",
+	"sec-fetch-dest":"empty",
+	"sec-fetch-site":"same-origin",
+	"user-agent":"Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36",
+	"x-csrftoken": "lih2ypMfhzdqwMbm5jIILqxZDj4zLeCW",
+	"x-ig-app-id": "936619743392459",
+	"x-ig-www-claim": "hmac.AR1_p9SjMFQF73bcZgzygDgxb9yBZUn83e69xoDD2qpSdmtW",
+	"x-instagram-ajax":"901e37113a69",
+	"x-requested-with":"XMLHttpRequest"
+	}
+	data = {"username":username,"enc_password":"#PWD_INSTAGRAM_BROWSER:0:1589682409:"+password,"queryParams":"{}","optIntoOneTap":"false"}
+	login = r.post(url,headers=headers,data=data,allow_redirects=True)
+	if login.text.find("userId") >= 0 :
+		Target = input("Target:")
+		url = "https://www.instagram.com/accounts/account_recovery_send_ajax/"
+		headers = {
+			"accept": "*/*",
+			"accept-encoding": "gzip,deflate,br",
+			"accept-language": "ar,en-US;q=0.9,en;q=0.8","content-length": "49",
+			"content-type": "application/x-www-form-urlencoded",
+			"origin": "https://www.instagram.com",
+			"referer": "https://www.instagram.com/accounts/password/reset/",
+			"user-agent": "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36",
+			"x-csrftoken": "j4u26vxxC6D7eE63HhBde0ahZeN4mVfK",
+			"x-ig-app-id": "936619743392459"
+				}
+		data = {"email_or_username":Target, "recaptcha_challenge_field": ""}
+		reqq = requests.post(url, headers=headers, data=data)
+		u = r.get(f"https://www.instagram.com/{Target}/?__a=1")
+		id =  str(u.json()["graphql"]["user"]["id"])
+		followers =  str(u.json()["graphql"]["user"]["edge_followed_by"]["count"])
+		following =  str(u.json()["graphql"]["user"]["edge_follow"]["count"])
+		ivtar = str(u.json()["graphql"]["user"]["profile_pic_url_hd"])
+		bio =  str(u.json()["graphql"]["user"]["biography"])
+		name =  str(u.json()["graphql"]["user"]["full_name"])
+		highlight = str(u.json()["graphql"]["user"]["highlight_reel_count"])
+		business =  str(u.json()["graphql"]["user"]["is_business_account"])
+		try:
+			email = str(reqq.json()["contact_point"])
+		except:
+			email = 'not found'
+		print(f"{Target} : {id}")
+		print("---------------------------------------")
+		print('followers: ' + followers)
+		print("---------------------------------------")
+		print('following: ' + following)
+		print("---------------------------------------")
+		print('bio: ')
+		print(bio)
+		print("---------------------------------------")
+		print('name: ')
+		print(name)
+		print("---------------------------------------")
+		print("email: " + email)
+		print("---------------------------------------")
+		print('highlight_count: ' + highlight)
+		print("---------------------------------------")
+		print('business_account: ' + business)
+		print("---------------------------------------")
+		print('ivtar: ' + ivtar)
+		print("---------------------------------------")
+except:
+	os.remove("profile.py")
